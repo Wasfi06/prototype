@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QuickStudy — Welcome</title>
+<style>
+  :root{
+    --paper:#EFF2EF; --card:#FFFFFF; --ink:#182528; --ink-soft:#4B5A5E; --line:#C9D2CD;
+    --indigo:#2C3E66; --indigo-dark:#1F2C49; --focus:#2C3E66;
+    --green:#256548; --green-bg:#E4F1EA; --amber:#7C5109; --amber-bg:#FBEDD8;
+    --slate:#5B6670; --slate-bg:#E7EAEC; --red:#A9333F; --red-bg:#F8E3E5;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-padding-top:16px;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.45;}
+  body.large-text{font-size:18px;}
+  h1,h2,h3{font-family:Georgia,"Iowan Old Style","Palatino Linotype",serif;font-weight:700;margin:0;}
+  h1[tabindex="-1"]:focus{outline:none;}
+  a{color:var(--indigo);}
+  button,input,select{font-family:inherit;font-size:inherit;}
+  a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:4px;}
+  .sidebar a:focus-visible, .sidebar button:focus-visible{outline-color:#fff;}
+  .hidden{display:none !important;}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+
+  .skip-link{position:absolute;left:12px;top:-60px;background:var(--indigo-dark);color:#fff;padding:10px 16px;border-radius:6px;z-index:500;transition:top .15s ease;text-decoration:none;font-weight:600;}
+  .skip-link:focus{top:12px;}
+
+  /* Public header */
+  .pub-header{display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:var(--card);border-bottom:1px solid var(--line);}
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;}
+  .brand-mark{width:34px;height:34px;border-radius:8px;background:var(--indigo);color:#fff;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-weight:700;font-size:17px;}
+  .brand-name{font-family:Georgia,serif;font-size:19px;font-weight:700;}
+  .pub-nav{display:flex;gap:10px;align-items:center;}
+
+  .app{display:flex;min-height:100vh;}
+  body:not(.authed) .app{min-height:0;display:block;}
+  body.authed #pubHeader{display:none;}
+  body:not(.authed) #sidebar{display:none;}
+
+  .sidebar{width:220px;background:var(--indigo-dark);color:#EDEFF5;padding:24px 16px;flex-shrink:0;}
+  .sidebar .brand{margin-bottom:32px;color:#fff;}
+  .sidebar .brand-mark{background:#3A5088;}
+  .nav-list{display:flex;flex-direction:column;gap:4px;list-style:none;margin:0;padding:0;}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:#E3E7F1;text-decoration:none;font-size:14px;font-weight:600;}
+  .nav-item:hover{background:#2A3B63;color:#fff;}
+  .nav-item[aria-current="page"]{background:#3A5088;color:#fff;}
+  .nav-icon{width:18px;text-align:center;}
+  .sidebar-foot{margin-top:40px;padding-top:16px;border-top:1px solid #33436B;display:flex;align-items:center;gap:10px;}
+  .avatar{width:32px;height:32px;border-radius:50%;background:#3A5088;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;}
+  .who{font-size:13px;color:#E3E7F1;}
+  .who strong{display:block;color:#fff;font-size:14px;}
+  .linklike{background:none;border:none;color:#CBD3EA;padding:0;margin-top:2px;font-size:12px;text-decoration:underline;cursor:pointer;}
+
+  main{flex:1;padding:28px 36px 56px;max-width:1180px;min-width:0;}
+  body:not(.authed) main{max-width:none;padding:0;}
+  .page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:20px;flex-wrap:wrap;}
+  .page-head h1{font-size:26px;}
+  .page-head p{color:var(--ink-soft);margin:4px 0 0;font-size:14px;}
+  .head-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:8px;border:1px solid transparent;font-weight:600;font-size:14px;cursor:pointer;text-decoration:none;}
+  .btn-primary{background:var(--indigo);color:#fff;}
+  .btn-primary:hover{background:var(--indigo-dark);}
+  .btn-ghost{background:#fff;border:1px solid var(--ink-soft);color:var(--ink);}
+  .btn-ghost:hover{background:#E4E8E4;}
+  .btn-danger{background:#fff;border:2px solid var(--red);color:var(--red);}
+  .btn-lg{padding:14px 24px;font-size:16px;}
+  .btn-sm{padding:6px 10px;font-size:13px;}
+
+  /* Landing */
+  .hero{background:var(--indigo-dark);color:#fff;padding:64px 40px 72px;}
+  .hero-inner{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:center;}
+  .hero h1{font-size:42px;line-height:1.12;margin-bottom:16px;}
+  .hero p{font-size:18px;color:#DDE2F0;margin:0 0 28px;}
+  .hero .btn-ghost{background:transparent;color:#fff;border-color:#fff;}
+  .hero .btn-ghost:hover{background:#2A3B63;}
+  .hero .btn-primary{background:#fff;color:var(--indigo-dark);}
+  .hero-actions{display:flex;gap:12px;flex-wrap:wrap;}
+  .mini{background:#fff;color:var(--ink);border-radius:12px;padding:18px;box-shadow:0 14px 34px rgba(0,0,0,.25);}
+  .mini h2{font-size:15px;margin-bottom:10px;}
+  .mini .row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px;}
+  .mini .row:last-child{border:none;}
+  .section{max-width:1000px;margin:0 auto;padding:48px 40px;}
+  .section h2{font-size:24px;margin-bottom:20px;}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;list-style:none;margin:0;padding:0;}
+  .steps li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;}
+  .steps .num{width:30px;height:30px;border-radius:50%;background:var(--indigo);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+  .steps h3{font-size:17px;margin-bottom:6px;}
+  .steps p{margin:0;color:var(--ink-soft);}
+  .a11y-band{background:#fff;border-top:1px solid var(--line);}
+  .a11y-band ul{margin:0;padding-left:20px;color:var(--ink-soft);}
+
+  /* Auth forms */
+  .auth-wrap{max-width:480px;margin:40px auto;padding:0 20px;}
+  .auth-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:30px;}
+  .auth-card h1{font-size:26px;margin-bottom:6px;}
+  .auth-card .sub{color:var(--ink-soft);margin:0 0 20px;}
+  .hint{font-size:12.5px;color:var(--ink-soft);margin-top:4px;}
+  .err-summary{border:2px solid var(--red);background:var(--red-bg);border-radius:10px;padding:12px 16px;margin-bottom:18px;}
+  .err-summary h2{font-size:15px;color:var(--red);margin-bottom:6px;font-family:inherit;}
+  .err-summary ul{margin:0;padding-left:20px;}
+  .err-summary a{color:var(--red);font-weight:700;}
+  .check-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:14px;}
+  .check-row input{width:18px;height:18px;margin-top:2px;flex-shrink:0;}
+  .check-row label{font-size:14px;}
+  .switch-note{text-align:center;margin-top:18px;color:var(--ink-soft);font-size:14px;}
+
+  .welcome-list{list-style:none;padding:0;margin:18px 0 24px;display:flex;flex-direction:column;gap:12px;}
+  .welcome-list li{display:flex;gap:12px;align-items:flex-start;}
+
+  /* Progress & deadlines */
+  .progress-strip{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:16px;margin-bottom:24px;}
+  .progress-strip .label{font-size:13px;font-weight:700;color:var(--ink-soft);white-space:nowrap;}
+  .progress-track{flex:1;height:10px;border-radius:6px;background:var(--slate-bg);overflow:hidden;}
+  .progress-fill{height:100%;background:var(--green);border-radius:6px;transition:width .4s ease;}
+  .progress-count{font-size:13px;font-weight:700;color:var(--green);white-space:nowrap;}
+  .deadlines h2{font-size:15px;margin-bottom:10px;}
+  .deadline-row{display:flex;gap:14px;margin-bottom:30px;flex-wrap:wrap;list-style:none;padding:0;}
+  .deadline-card{flex:1;min-width:200px;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--indigo);border-radius:10px;padding:14px 16px;}
+  .deadline-card.urgent{border-left-color:var(--red);}
+  .deadline-card .subject{font-size:11px;font-weight:700;letter-spacing:.02em;color:var(--ink-soft);text-transform:uppercase;}
+  .deadline-card .title{font-weight:700;margin:4px 0 8px;font-size:15px;}
+  .deadline-card .when{font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;}
+  .deadline-card.urgent .when{color:var(--red);}
+  .deadline-card:not(.urgent) .when{color:var(--ink-soft);}
+  .deadline-card .when svg{width:14px;height:14px;}
+  .empty{color:var(--ink-soft);}
+
+  .filter{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--ink-soft);}
+  .filter select{padding:8px 10px;border:1px solid var(--ink-soft);border-radius:7px;background:#fff;color:var(--ink);font-size:13px;}
+
+  /* Board */
+  .board{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;}
+  .column{background:#E7EBE7;border-radius:12px;padding:14px;min-height:140px;}
+  .column.drag-over{outline:3px dashed var(--indigo);outline-offset:-3px;}
+  .column-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:0 4px;}
+  .column-head h3{font-size:14px;font-family:inherit;}
+  .count-badge{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:2px 9px;font-size:12px;font-weight:700;color:var(--ink-soft);}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:13px 14px;margin-bottom:12px;cursor:grab;}
+  .card.dragging{opacity:.5;}
+  .tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px;margin-bottom:8px;text-transform:uppercase;}
+  .tag-Mathematics{background:#E1E8F5;color:#2C4A8C;}
+  .tag-Biology{background:var(--green-bg);color:var(--green);}
+  .tag-History{background:var(--amber-bg);color:var(--amber);}
+  .card .title{font-weight:700;font-size:14px;margin-bottom:6px;}
+  .card .meta{font-size:12px;color:var(--ink-soft);margin-bottom:10px;}
+  .status-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:3px 9px;border-radius:20px;margin-bottom:10px;}
+  .status-badge svg{width:12px;height:12px;flex-shrink:0;}
+  .status-not{background:var(--slate-bg);color:var(--slate);}
+  .status-progress{background:var(--amber-bg);color:var(--amber);}
+  .status-done{background:var(--green-bg);color:var(--green);}
+  .status-overdue{background:var(--red-bg);color:var(--red);}
+  .subtask-track{height:6px;border-radius:4px;background:var(--slate-bg);overflow:hidden;margin-bottom:10px;}
+  .subtask-fill{height:100%;background:var(--indigo);border-radius:4px;}
+  .card-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .move-select{font-size:12px;border:1px solid var(--ink-soft);border-radius:6px;padding:4px 6px;background:#fff;color:var(--ink);flex:1;min-width:110px;}
+  .complete-btn{width:28px;height:28px;border-radius:50%;border:2px solid var(--green);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;color:var(--green);padding:0;}
+  .complete-btn[aria-pressed="true"]{background:var(--green);color:#fff;}
+  .complete-btn svg{width:14px;height:14px;}
+  .reschedule-link{background:none;border:none;color:var(--red);font-weight:700;font-size:12px;cursor:pointer;padding:2px;text-decoration:underline;}
+  .card.just-completed{animation:pop .5s ease;}
+  @keyframes pop{0%{transform:scale(1);}35%{transform:scale(1.035);box-shadow:0 0 0 3px var(--green-bg);}100%{transform:scale(1);}}
+
+  /* Cards/sections on group & settings pages */
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin-bottom:20px;}
+  .panel h2{font-size:18px;margin-bottom:4px;}
+  .panel .sub{color:var(--ink-soft);margin:0 0 14px;font-size:14px;}
+  .list{list-style:none;margin:0;padding:0;}
+  .list > li{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--line);flex-wrap:wrap;}
+  .list > li:last-child{border-bottom:none;}
+  .member .avatar{background:var(--indigo);}
+  .info{flex:1;min-width:180px;}
+  .name{font-weight:700;font-size:14px;}
+  .role{font-weight:600;color:var(--ink-soft);font-size:12px;margin-left:6px;}
+  .stat{font-size:12.5px;color:var(--ink-soft);margin-top:4px;}
+  .info .progress-track{height:6px;margin-top:6px;}
+  .row-actions{display:flex;gap:8px;flex-wrap:wrap;}
+  .pending-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;background:var(--amber-bg);color:var(--amber);padding:3px 9px;border-radius:20px;}
+  .pending-badge svg{width:12px;height:12px;}
+  .invite-form{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;}
+  .invite-form .field{flex:1;min-width:240px;margin:0;}
+  .hl-group{border-left:5px solid var(--indigo);}
+
+  /* Switch */
+  .switch{display:inline-flex;align-items:center;gap:8px;border:2px solid var(--ink-soft);background:#fff;color:var(--ink);border-radius:20px;padding:3px 12px 3px 4px;cursor:pointer;font-weight:700;font-size:13px;min-width:78px;}
+  .switch .knob{width:20px;height:20px;border-radius:50%;background:var(--ink-soft);display:inline-block;transition:transform .15s;}
+  .switch[aria-checked="true"]{border-color:var(--green);background:var(--green-bg);color:var(--green);}
+  .switch[aria-checked="true"] .knob{background:var(--green);}
+  .setting{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:14px 0;border-bottom:1px solid var(--line);flex-wrap:wrap;}
+  .setting:last-child{border-bottom:none;}
+  .setting .txt{flex:1;min-width:220px;}
+  .setting .t{font-weight:700;}
+  .setting .d{font-size:13px;color:var(--ink-soft);}
+
+  /* Dialogs */
+  dialog{border:none;border-radius:14px;padding:0;width:440px;max-width:92vw;box-shadow:0 20px 50px rgba(0,0,0,.3);color:var(--ink);}
+  dialog::backdrop{background:rgba(15,20,24,.5);}
+  .modal{padding:26px 28px;}
+  .modal h2{font-size:19px;margin-bottom:6px;}
+  .modal .sub{font-size:13.5px;color:var(--ink-soft);margin:0 0 18px;}
+  .field{margin-bottom:14px;}
+  .field label,.field legend{display:block;font-size:13px;font-weight:700;color:var(--ink-soft);margin-bottom:5px;padding:0;}
+  .field input[type=text],.field input[type=email],.field input[type=password],.field input[type=date],.field input[type=number],.field select{width:100%;padding:9px 11px;border:1px solid var(--ink-soft);border-radius:7px;font-size:14px;background:#fff;color:var(--ink);}
+  .field input.invalid{border:2px solid var(--red);}
+  .field-row{display:flex;gap:12px;}
+  .field-row .field{flex:1;}
+  fieldset.field{border:none;margin:0 0 14px;padding:0;}
+  .radio{display:flex;gap:10px;align-items:flex-start;padding:8px 0;font-size:14px;}
+  .radio input{margin-top:3px;width:18px;height:18px;}
+  .error-msg{display:flex;align-items:flex-start;gap:6px;color:var(--red);font-size:13px;font-weight:700;margin-top:5px;}
+  .error-msg svg{width:14px;height:14px;flex-shrink:0;margin-top:2px;}
+  .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px;flex-wrap:wrap;}
+  .quick{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 4px;}
+  .achieve-list{list-style:none;padding:0;margin:14px 0 0;display:flex;flex-direction:column;gap:8px;}
+  .achieve-list li{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--ink-soft);}
+  .achieve-list svg{width:14px;height:14px;color:var(--green);flex-shrink:0;}
+  .plan-list{list-style:none;margin:0 0 4px;padding:0;}
+  .plan-list li{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;}
+  .plan-list .step{width:24px;height:24px;border-radius:50%;background:var(--indigo);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .plan-list .what{flex:1;font-weight:700;}
+  .plan-list .when{color:var(--ink-soft);font-size:13px;white-space:nowrap;}
+
+  /* Toast */
+  .toast-wrap{position:fixed;bottom:24px;left:0;right:0;display:flex;justify-content:center;pointer-events:none;z-index:1000;}
+  .toast{pointer-events:auto;background:var(--indigo-dark);color:#fff;padding:12px 16px 12px 20px;border-radius:8px;display:flex;align-items:center;gap:14px;font-size:14px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.25);max-width:92vw;}
+  .toast svg{width:16px;height:16px;color:#9BE6BB;flex-shrink:0;}
+  .toast button{background:transparent;border:1px solid #fff;color:#fff;border-radius:6px;padding:4px 10px;font-weight:700;cursor:pointer;font-size:13px;}
+  .toast button:focus-visible{outline-color:#fff;}
+
+  /* Reduced motion (user setting or OS preference) */
+  body.reduce-motion *{animation:none !important;transition:none !important;}
+  @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important;}}
+
+  /* High-contrast / forced colours: keep status visible without colour */
+  @media (forced-colors: active){
+    .status-badge,.pending-badge,.tag,.count-badge,.switch,.btn,.deadline-card,.card{border:1px solid CanvasText;}
+    .progress-track,.subtask-track{border:1px solid CanvasText;}
+    .progress-fill,.subtask-fill{background:Highlight;}
+  }
+
+  /* Small screens / 200% zoom */
+  @media (max-width: 900px){
+    .app{flex-direction:column;}
+    .sidebar{width:100%;padding:12px 16px;}
+    .sidebar .brand{margin-bottom:10px;}
+    .nav-list{flex-direction:row;flex-wrap:wrap;}
+    .sidebar-foot{margin-top:10px;padding-top:10px;}
+    main{padding:20px 16px 40px;}
+    .board{grid-template-columns:1fr;}
+    .hero-inner{grid-template-columns:1fr;}
+    .hero h1{font-size:32px;}
+    .steps{grid-template-columns:1fr;}
+    .pub-header{padding:12px 16px;flex-wrap:wrap;gap:10px;}
+    .pub-nav .btn{padding:8px 12px;}
+    .hero,.section{padding-left:20px;padding-right:20px;}
+  }
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" id="skipLink">Skip to main content</a>
+
+<div id="root">
+  <header class="pub-header" id="pubHeader">
+    <a class="brand" href="#landing"><span class="brand-mark" aria-hidden="true">Q</span><span class="brand-name">QuickStudy</span></a>
+    <nav class="pub-nav" aria-label="Account">
+      <a class="btn btn-ghost" href="#login">Sign in</a>
+      <a class="btn btn-primary" href="#register">Create account</a>
+    </nav>
+  </header>
+
+  <div class="app" id="app">
+    <nav class="sidebar" id="sidebar" aria-label="Main navigation">
+      <a class="brand" href="#dashboard"><span class="brand-mark" aria-hidden="true">Q</span><span class="brand-name">QuickStudy</span></a>
+      <ul class="nav-list">
+        <li><a class="nav-item" href="#dashboard" data-nav="dashboard"><span class="nav-icon" aria-hidden="true">&#9632;</span> Dashboard</a></li>
+        <li><a class="nav-item" href="#group" data-nav="group"><span class="nav-icon" aria-hidden="true">&#9673;</span> Study group</a></li>
+        <li><a class="nav-item" href="#settings" data-nav="settings"><span class="nav-icon" aria-hidden="true">&#9881;</span> Settings</a></li>
+      </ul>
+      <div class="sidebar-foot">
+        <div class="avatar" aria-hidden="true" id="userInitials">WA</div>
+        <div class="who"><strong id="userName">Wasfi A.</strong><button type="button" class="linklike" data-action="signout">Sign out</button></div>
+      </div>
+    </nav>
+
+    <main id="main" tabindex="-1">
+
+      <!-- LANDING -->
+      <section data-view="landing">
+        <div class="hero"><div class="hero-inner">
+          <div>
+            <h1 tabindex="-1">Turn every deadline into a plan you can follow</h1>
+            <p>QuickStudy breaks assignments into small, dated steps, so you always know what to do next and never have to plan from scratch.</p>
+            <div class="hero-actions">
+              <a class="btn btn-primary btn-lg" href="#register">Create free account</a>
+              <a class="btn btn-ghost btn-lg" href="#login">Sign in</a>
+            </div>
+          </div>
+          <div class="mini" aria-label="Example of an upcoming deadline plan" role="group">
+            <h2>Essay: Cold War causes</h2>
+            <div class="row"><span>Research</span><span class="status-badge status-done" style="margin:0"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M8 13.4 4.6 10l-1.4 1.4L8 16.2 17 7.2l-1.4-1.4z"/></svg>Completed</span></div>
+            <div class="row"><span>Plan</span><span class="status-badge status-done" style="margin:0"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M8 13.4 4.6 10l-1.4 1.4L8 16.2 17 7.2l-1.4-1.4z"/></svg>Completed</span></div>
+            <div class="row"><span>Write</span><span class="status-badge status-progress" style="margin:0"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg>In progress</span></div>
+            <div class="row"><span>Edit</span><span class="status-badge status-not" style="margin:0"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="10" cy="10" r="7"/></svg>Not started</span></div>
+          </div>
+        </div></div>
+        <div class="section">
+          <h2>How it works</h2>
+          <ol class="steps">
+            <li><div class="num" aria-hidden="true">1</div><h3>Add a deadline</h3><p>Enter the task, subject, due date and roughly how long it will take.</p></li>
+            <li><div class="num" aria-hidden="true">2</div><h3>Get a step-by-step plan</h3><p>QuickStudy splits it into research, plan, write, edit and submit, with dates.</p></li>
+            <li><div class="num" aria-hidden="true">3</div><h3>Track progress, together if you like</h3><p>Tick steps off, reschedule without stress, and share progress with a study group.</p></li>
+          </ol>
+        </div>
+        <div class="a11y-band"><div class="section">
+          <h2>Designed to be accessible</h2>
+          <ul>
+            <li>Works fully with a keyboard, with a visible focus indicator on every control.</li>
+            <li>Status is always shown with an icon and a word, never by colour alone.</li>
+            <li>Built to WCAG 2.0 Level AA contrast, with reduced-motion and larger-text options in Settings.</li>
+          </ul>
+        </div></div>
+      </section>
+
+      <!-- REGISTER -->
+      <section data-view="register" class="hidden">
+        <div class="auth-wrap"><div class="auth-card">
+          <h1 tabindex="-1">Create your account</h1>
+          <p class="sub">It takes under a minute. Fields marked required must be completed.</p>
+          <div id="regSummary" class="err-summary hidden" role="alert" tabindex="-1"><h2>There are problems with your details</h2><ul id="regSummaryList"></ul></div>
+          <form id="registerForm" novalidate>
+            <div class="field"><label for="regName">Full name (required)</label>
+              <input id="regName" type="text" autocomplete="name" aria-describedby="regNameErr" aria-required="true">
+              <div class="error-msg hidden" id="regNameErr"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 3 2 17h16z"/><path d="M10 8v4"/></svg><span></span></div></div>
+            <div class="field"><label for="regEmail">Email address (required)</label>
+              <input id="regEmail" type="email" autocomplete="email" aria-describedby="regEmailErr" aria-required="true">
+              <div class="error-msg hidden" id="regEmailErr"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 3 2 17h16z"/><path d="M10 8v4"/></svg><span></span></div></div>
+            <div class="field"><label for="regPass">Password (required)</label>
+              <input id="regPass" type="password" autocomplete="new-password" aria-describedby="regPassHint regPassErr" aria-required="true">
+              <div class="hint" id="regPassHint">At least 8 characters, including one number.</div>
+              <div class="error-msg hidden" id="regPassErr"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 3 2 17h16z"/><path d="M10 8v4"/></svg><span></span></div></div>
+            <div class="check-row"><input id="showPass" type="checkbox"><label for="showPass">Show password</label></div>
+            <div class="field" style="margin-bottom:6px">
+              <div class="check-row" style="margin-bottom:0"><input id="regTerms" type="checkbox" aria-describedby="regTermsErr" aria-required="true"><label for="regTerms">I agree to the terms of use and privacy policy (required)</label></div>
+              <div class="error-msg hidden" id="regTermsErr"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 3 2 17h16z"/><path d="M10 8v4"/></svg><span></span></div></div>
+            <button class="btn btn-primary btn-lg" type="submit" style="width:100%;justify-content:center;margin-top:10px">Create account</button>
+          </form>
+          <p class="switch-note">Already have an account? <a href="#login">Sign in</a></p>
+        </div></div>
+      </section>
+
+      <!-- LOGIN -->
+      <section data-view="login" class="hidden">
+        <div class="auth-wrap"><div class="auth-card">
+          <h1 tabindex="-1">Sign in</h1>
+          <p class="sub">Welcome back. Prototype note: any valid email and password will work.</p>
+          <form id="loginForm" novalidate>
+            <div class="field"><label for="logEmail">Email address</label>
+              <input id="logEmail" type="email" autocomplete="email" aria-describedby="logEmailErr" aria-required="true">
+              <div class="error-msg hidden" id="logEmailErr"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 3 2 17h16z"/><path d="M10 8v4"/></svg><span></span></div></div>
+            <div class="field"><label for="logPass">Password</label>
+              <input id="logPass" type="password" autocomplete="current-password" aria-describedby="logPassErr" aria-required="true">
+              <div class="error-msg hidden" id="logPassErr"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 3 2 17h16z"/><path d="M10 8v4"/></svg><span></span></div></div>
+            <button class="btn btn-primary btn-lg" type="submit" style="width:100%;justify-content:center">Sign in</button>
+          </form>
+          <p class="switch-note">New to QuickStudy? <a href="#register">Create an account</a></p>
+        </div></div>
+      </section>
+
+      <!-- WELCOME / ONBOARDING -->
+      <section data-view="welcome" class="hidden">
+        <div class="auth-wrap"><div class="auth-card">
+          <h1 tabindex="-1" id="welcomeTitle">Welcome</h1>
+          <p class="sub">Here is how your plan will look. Every task has one of three statuses, shown with an icon and a word:</p>
+          <ul class="welcome-list">
+            <li><span class="status-badge status-not" style="margin:0"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="10" cy="10" r="7"/></svg>Not started</span><span>You have added it, but not begun.</span></li>
+            <li><span class="status-badge status-progress" style="margin:0"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg>In progress</span><span>You are working on at least one step.</span></li>
+            <li><span class="status-badge status-done" style="margin:0"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M8 13.4 4.6 10l-1.4 1.4L8 16.2 17 7.2l-1.4-1.4z"/></svg>Completed</span><span>All steps are done.</span></li>
+          </ul>
+          <p class="sub">Tip: press <strong>N</strong> on the dashboard to add a task quickly.</p>
+          <div class="modal-actions" style="justify-content:flex-start;margin-top:8px">
+            <button class="btn btn-primary" type="button" data-action="first-task">Add my first task</button>
+            <a class="btn btn-ghost" href="#dashboard">Go to dashboard</a>
+          </div>
+        </div></div>
+      </section>
+
+      <!-- DASHBOARD -->
+      <section data-view="dashboard" class="hidden">
+        <div class="page-head">
+          <div><h1 tabindex="-1">Your study plan</h1><p id="todayLine"></p></div>
+          <div class="head-actions">
+            <div class="filter"><label for="subjectFilter">Show</label>
+              <select id="subjectFilter"><option value="all">All subjects</option><option>Mathematics</option><option>Biology</option><option>History</option></select></div>
+            <button class="btn btn-primary" type="button" id="openAddTaskBtn" data-action="add-task"><span aria-hidden="true">+</span> Add task</button>
+          </div>
+        </div>
+        <div class="progress-strip" role="group" aria-label="Weekly progress">
+          <span class="label">This week</span>
+          <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="weekFill"></div></div>
+          <span class="progress-count" id="weekCount"></span>
+        </div>
+        <section class="deadlines" aria-labelledby="deadlinesH"><h2 id="deadlinesH">Upcoming deadlines</h2><ul class="deadline-row" id="deadlineRow"></ul></section>
+        <section aria-labelledby="boardH">
+          <h2 id="boardH" class="sr-only">Task board</h2>
+          <div class="board">
+            <div class="column" data-status="not"><div class="column-head"><h3>Not started</h3><span class="count-badge" id="countNot"></span></div><div id="col-not"></div></div>
+            <div class="column" data-status="progress"><div class="column-head"><h3>In progress</h3><span class="count-badge" id="countProgress"></span></div><div id="col-progress"></div></div>
+            <div class="column" data-status="done"><div class="column-head"><h3>Completed</h3><span class="count-badge" id="countDone"></span></div><div id="col-done"></div></div>
+          </div>
+        </section>
+      </section>
+
+      <!-- GROUP -->
+      <section data-view="group" class="hidden" id="groupView"></section>
+
+      <!-- SETTINGS -->
+      <section data-view="settings" class="hidden" id="settingsView"></section>
+    </main>
+  </div>
+</div>
+
+<!-- Dialogs (outside #root so the page behind is inert while open) -->
+<dialog id="addTaskDialog" aria-labelledby="addTaskTitle"><div class="modal">
+  <h2 id="addTaskTitle">Add a task</h2><p class="sub">Break your work down before it piles up.</p>
+  <form id="addTaskForm" novalidate>
+    <div class="field"><label for="taskTitle">Task title</label>
+      <input id="taskTitle" type="text" placeholder="e.g. Read chapters 4–5" aria-describedby="taskTitleErr" aria-required="true">
+      <div class="error-msg hidden" id="taskTitleErr" role="alert"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 3 2 17h16z"/><path d="M10 8v4"/></svg><span></span></div></div>
+    <div class="field-row">
+      <div class="field"><label for="taskSubject">Subject</label><select id="taskSubject"><option>Mathematics</option><option selected>Biology</option><option>History</option></select></div>
+      <div class="field"><label for="taskDue">Due date</label><input id="taskDue" type="date" aria-describedby="taskDueErr">
+        <div class="error-msg hidden" id="taskDueErr" role="alert"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 3 2 17h16z"/><path d="M10 8v4"/></svg><span></span></div></div>
+    </div>
+    <div class="field"><label for="taskHours">Estimated work (hours)</label><input id="taskHours" type="number" value="3" aria-describedby="taskHoursErr">
+      <div class="error-msg hidden" id="taskHoursErr" role="alert"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 3 2 17h16z"/><path d="M10 8v4"/></svg><span></span></div></div>
+    <div class="check-row"><input id="taskBreakdown" type="checkbox" checked><label for="taskBreakdown">Break this into sub-tasks automatically (research, plan, write, edit, submit)</label></div>
+    <div class="modal-actions"><button type="button" class="btn btn-ghost" data-close="addTaskDialog">Cancel</button><button type="submit" class="btn btn-primary">Add task</button></div>
+  </form></div></dialog>
+
+<dialog id="planDialog" aria-labelledby="planTitle"><div class="modal">
+  <h2 id="planTitle">Your study plan is ready</h2><p class="sub" id="planSub"></p>
+  <ol class="plan-list" id="planList"></ol>
+  <div class="modal-actions"><button type="button" class="btn btn-primary" id="closePlan">Go to dashboard</button></div></div></dialog>
+
+<dialog id="rescheduleDialog" aria-labelledby="rescheduleTitle"><div class="modal">
+  <h2 id="rescheduleTitle">Let’s find a new time</h2>
+  <p class="sub" id="rescheduleSub"></p>
+  <div class="field"><label for="newDue">Reschedule to</label>
+    <input id="newDue" type="date" aria-describedby="newDueErr">
+    <div class="error-msg hidden" id="newDueErr" role="alert"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 3 2 17h16z"/><path d="M10 8v4"/></svg><span></span></div></div>
+  <div class="quick" role="group" aria-label="Quick date choices">
+    <button type="button" class="btn btn-ghost btn-sm" data-quick="1">Tomorrow</button>
+    <button type="button" class="btn btn-ghost btn-sm" data-quick="3">In 3 days</button>
+    <button type="button" class="btn btn-ghost btn-sm" data-quick="7">Next week</button></div>
+  <ul class="achieve-list" aria-label="Your recent wins" id="winsList"></ul>
+  <div class="modal-actions"><button type="button" class="btn btn-ghost" data-close="rescheduleDialog">Not now</button><button type="button" class="btn btn-primary" id="confirmReschedule">Reschedule task</button></div>
+</div></dialog>
+
+<dialog id="confirmDialog" aria-labelledby="confirmTitle"><div class="modal">
+  <h2 id="confirmTitle"></h2><p class="sub" id="confirmText"></p>
+  <div class="modal-actions"><button type="button" class="btn btn-ghost" data-close="confirmDialog">Cancel</button><button type="button" class="btn btn-danger" id="confirmOk"></button></div></div></dialog>
+
+<dialog id="encourageDialog" aria-labelledby="encTitle"><div class="modal">
+  <h2 id="encTitle">Send encouragement</h2><p class="sub" id="encSub"></p>
+  <fieldset class="field"><legend>Choose a message</legend>
+    <label class="radio"><input type="radio" name="encMsg" value="You've got this!" checked> You’ve got this!</label>
+    <label class="radio"><input type="radio" name="encMsg" value="Want to study together later?"> Want to study together later?</label>
+    <label class="radio"><input type="radio" name="encMsg" value="Small steps count. Proud of you."> Small steps count. Proud of you.</label></fieldset>
+  <div class="modal-actions"><button type="button" class="btn btn-ghost" data-close="encourageDialog">Cancel</button><button type="button" class="btn btn-primary" id="encSend">Send message</button></div></div></dialog>
+
+<div class="toast-wrap" role="status" aria-live="polite" id="toastWrap"></div>
+
+<script>
+/* ---------- Dates (fixed demo date so the prototype is repeatable) ---------- */
+const TODAY = new Date(2026, 10, 2);               // Monday 2 November 2026
+const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const addDays = n => { const d = new Date(TODAY); d.setDate(d.getDate()+n); return d; };
+const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const parse = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); };
+const fmt = d => `${DAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}`;
+const diff = s => Math.round((parse(s) - TODAY) / 86400000);
+const $ = id => document.getElementById(id);
+
+const ICON = {
+  not:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="10" cy="10" r="7"/></svg>',
+  progress:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg>',
+  done:'<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M8 13.4 4.6 10l-1.4 1.4L8 16.2 17 7.2l-1.4-1.4z"/></svg>',
+  overdue:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 3 2 17h16z"/><path d="M10 8v4"/><circle cx="10" cy="14.5" r=".6" fill="currentColor" stroke="none"/></svg>',
+  clock:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg>'
+};
+const LABEL = { not:'Not started', progress:'In progress', done:'Completed', overdue:'Overdue' };
+
+/* ---------- State ---------- */
+let user = null;
+let tasks = [
+  { id:1, title:'Draft literature review outline', subject:'Biology',     due:iso(addDays(-1)), status:'progress', sub:1, subTotal:4, shared:false },
+  { id:2, title:'Problem set 4 — Calculus',        subject:'Mathematics', due:iso(addDays(1)),  status:'progress', sub:2, subTotal:5, shared:true  },
+  { id:3, title:'Essay draft: Cold War causes',    subject:'History',     due:iso(addDays(3)),  status:'progress', sub:1, subTotal:3, shared:false },
+  { id:4, title:'Revision quiz — Vectors',         subject:'Mathematics', due:iso(addDays(5)),  status:'not',      sub:0, subTotal:2, shared:false },
+  { id:5, title:'Read chapters 1–3',               subject:'Biology',     due:iso(addDays(-4)), status:'done',     sub:3, subTotal:3, shared:false, doneLabel:'Thu' },
+  { id:6, title:'Timeline of key events',          subject:'History',     due:iso(addDays(-3)), status:'done',     sub:4, subTotal:4, shared:false, doneLabel:'Fri' },
+  { id:7, title:'Flashcards — cell organelles',    subject:'Biology',     due:iso(addDays(-2)), status:'done',     sub:5, subTotal:5, shared:false, doneLabel:'Sat' },
+];
+let settings = { shareProgress:true, shareTitles:false, allowInvites:true, allowEncouragement:true, emailReminders:true, reduceMotion:false, largeText:false };
+let group = {
+  name:'CompSci Crew', admin:true,
+  members:[ {name:'Naledi P.',ini:'NP',done:5,total:6}, {name:'Thabo M.',ini:'TM',done:1,total:6}, {name:'Riya J.',ini:'RJ',done:4,total:6} ],
+  pending:[ {email:'sipho@example.com', days:1} ],
+};
+let undoFn = null, pendingConfirm = null, rescheduleId = null, encourageTo = null;
+
+const dueText = t => { if (t.status==='done') return `Completed ${t.doneLabel||'today'}`; const n = diff(t.due);
+  return n<0 ? `${-n} day${-n>1?'s':''} late` : n===0 ? 'Due today' : n===1 ? 'Due tomorrow' : `Due in ${n} days`; };
+const statusKey = t => t.status==='done' ? 'done' : (diff(t.due)<0 ? 'overdue' : t.status);
+
+/* ---------- Toast with optional Undo ---------- */
+function toast(msg, undo){
+  const wrap = $('toastWrap'); wrap.innerHTML = '';
+  const el = document.createElement('div'); el.className = 'toast';
+  el.innerHTML = `${ICON.done}<span></span>`; el.querySelector('span').textContent = msg;
+  if (undo){ const b = document.createElement('button'); b.type='button'; b.textContent='Undo'; b.onclick = () => { undo(); wrap.innerHTML=''; }; el.appendChild(b); }
+  wrap.appendChild(el);
+  clearTimeout(toast._t); toast._t = setTimeout(()=>{ wrap.innerHTML=''; }, 9000);
+}
+
+/* ---------- Errors (icon + words + aria, never colour alone) ---------- */
+function setErr(id, msg){
+  const input = $(id), err = $(id+'Err');
+  err.querySelector('span').textContent = 'Error: ' + msg; err.classList.remove('hidden');
+  if (input){ input.classList.add('invalid'); input.setAttribute('aria-invalid','true'); }
+}
+function clearErrs(ids){ ids.forEach(id=>{ const i=$(id), e=$(id+'Err'); if(e) e.classList.add('hidden'); if(i){ i.classList.remove('invalid'); i.removeAttribute('aria-invalid'); } }); }
+
+/* ---------- Routing ---------- */
+const ROUTES = { landing:{t:'Welcome'}, register:{t:'Create account'}, login:{t:'Sign in'}, welcome:{t:'Welcome'}, dashboard:{t:'Dashboard',auth:1}, group:{t:'Study group',auth:1}, settings:{t:'Settings',auth:1} };
+const APP_VIEWS = ['dashboard','group','settings'];
+let firstRoute = true;
+function route(){
+  let name = location.hash.slice(1) || 'landing';
+  if (!ROUTES[name]) name = 'landing';
+  if (ROUTES[name].auth && !user){ location.hash = '#login'; return; }
+  document.querySelectorAll('[data-view]').forEach(v => v.classList.toggle('hidden', v.dataset.view !== name));
+  document.body.classList.toggle('authed', APP_VIEWS.includes(name));
+  document.querySelectorAll('[data-nav]').forEach(a => { if (a.dataset.nav===name) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });
+  document.title = `QuickStudy — ${ROUTES[name].t}`;
+  if (name==='dashboard') renderDashboard();
+  if (name==='group') renderGroup();
+  if (name==='settings') renderSettings();
+  if (name==='welcome') $('welcomeTitle').textContent = `Welcome, ${user ? user.first : 'there'}`;
+  window.scrollTo(0,0);
+  if (!firstRoute){ const h = document.querySelector(`[data-view="${name}"] h1`); if (h) h.focus(); }
+  firstRoute = false;
+}
+window.addEventListener('hashchange', route);
+
+/* ---------- Dashboard ---------- */
+function cardHTML(t){
+  const k = statusKey(t), pct = Math.round(t.sub/t.subTotal*100), done = t.status==='done';
+  return `<div class="card" draggable="true" data-id="${t.id}" id="card-${t.id}">
+    <span class="tag tag-${t.subject}">${t.subject}</span>
+    <div class="title">${t.title}</div>
+    <div class="status-badge status-${k}">${ICON[k]}<span>${LABEL[k]} · ${dueText(t)}</span></div>
+    <div class="subtask-track" aria-hidden="true"><div class="subtask-fill" style="width:${pct}%"></div></div>
+    <div class="meta">${t.sub} of ${t.subTotal} sub-tasks done</div>
+    <div class="card-actions">
+      <button class="complete-btn" type="button" aria-pressed="${done}" aria-label="Mark ‘${t.title}’ as complete" data-action="toggle-done" data-id="${t.id}">${ICON.done}</button>
+      <label class="sr-only" for="move-${t.id}">Move ‘${t.title}’ to</label>
+      <select class="move-select" id="move-${t.id}" data-move="${t.id}">
+        <option value="not" ${t.status==='not'?'selected':''}>Not started</option>
+        <option value="progress" ${t.status==='progress'?'selected':''}>In progress</option>
+        <option value="done" ${t.status==='done'?'selected':''}>Completed</option></select>
+      ${k==='overdue' ? `<button class="reschedule-link" type="button" data-action="reschedule" data-id="${t.id}">Reschedule<span class="sr-only"> ‘${t.title}’</span></button>` : ''}
+    </div></div>`;
+}
+function renderDashboard(){
+  $('todayLine').textContent = `${['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][TODAY.getDay()]}, ${TODAY.getDate()} November — here’s what needs your attention.`;
+  const f = $('subjectFilter').value;
+  const cols = { not:[], progress:[], done:[] };
+  tasks.forEach(t => { if (f==='all' || t.subject===f) cols[t.status].push(t); });
+  ['not','progress','done'].forEach(k => { $('col-'+k).innerHTML = cols[k].map(cardHTML).join(''); });
+  $('countNot').textContent = cols.not.length; $('countProgress').textContent = cols.progress.length; $('countDone').textContent = cols.done.length;
+  const done = tasks.filter(t=>t.status==='done').length;
+  $('weekFill').style.width = Math.round(done/tasks.length*100)+'%';
+  $('weekCount').textContent = `${done} of ${tasks.length} tasks completed`;
+  const upcoming = tasks.filter(t=>t.status!=='done').sort((a,b)=>a.due.localeCompare(b.due)).slice(0,4);
+  $('deadlineRow').innerHTML = upcoming.length ? upcoming.map(t => { const urgent = diff(t.due)<=1;
+    return `<li class="deadline-card ${urgent?'urgent':''}"><div class="subject">${t.subject}</div><div class="title">${t.title}</div><div class="when">${urgent?ICON.overdue:ICON.clock}<span>${diff(t.due)<0?'Overdue · ':''}${dueText(t)}</span></div></li>`; }).join('')
+    : '<li class="empty">Nothing due. Add a task to get started.</li>';
+}
+function snapshot(){ return JSON.stringify(tasks); }
+function withUndo(msg, change){ const before = snapshot(); change(); undoFn = () => { tasks = JSON.parse(before); renderDashboard(); }; renderDashboard(); toast(msg, undoFn); }
+
+/* Add task */
+function openAddTask(){ $('taskDue').min = iso(TODAY); $('taskDue').value = iso(addDays(7)); $('addTaskDialog').showModal(); $('taskTitle').focus(); }
+function buildPlan(title, dueStr, hours){
+  const days = Math.max(1, diff(dueStr));
+  const steps = [['Research',.2],['Plan',.1],['Write',.4],['Edit',.2],['Submit',.1]];
+  $('planList').innerHTML = steps.map((s,i)=>`<li><span class="step" aria-hidden="true">${i+1}</span><span class="what">${s[0]}</span><span class="when">${fmt(addDays(Math.round(days*(i+1)/steps.length)))} · ${(hours*s[1]).toFixed(1)} h</span></li>`).join('');
+  $('planSub').textContent = `“${title}” is split into five steps between today and ${fmt(parse(dueStr))}.`;
+}
+$('addTaskForm').onsubmit = e => {
+  e.preventDefault(); clearErrs(['taskTitle','taskDue','taskHours']);
+  const title = $('taskTitle').value.trim(), due = $('taskDue').value, hours = Number($('taskHours').value);
+  const bad = [];
+  if (!title){ setErr('taskTitle','enter a task title, for example “Read chapters 4–5”.'); bad.push('taskTitle'); }
+  if (!due){ setErr('taskDue','choose a due date.'); bad.push('taskDue'); }
+  else if (diff(due)<0){ setErr('taskDue',`the due date cannot be in the past. Choose ${fmt(TODAY)} or later.`); bad.push('taskDue'); }
+  if (!(hours>=1)){ setErr('taskHours','enter a whole number of hours, 1 or more.'); bad.push('taskHours'); }
+  if (bad.length){ $(bad[0]).focus(); return; }
+  const breakdown = $('taskBreakdown').checked, subject = $('taskSubject').value;
+  tasks.push({ id:Date.now(), title, subject, due, status:'not', sub:0, subTotal:breakdown?5:1, shared:settings.shareTitles });
+  $('taskTitle').value=''; $('addTaskDialog').close(); renderDashboard();
+  if (breakdown){ buildPlan(title, due, hours); $('planDialog').showModal(); $('closePlan').focus(); }
+  else toast(`“${title}” added to your plan`);
+};
+$('closePlan').onclick = () => { $('planDialog').close(); toast('Study plan saved'); };
+
+/* Reschedule */
+function openReschedule(id){
+  const t = tasks.find(x=>x.id===id); rescheduleId = id; clearErrs(['newDue']);
+  $('rescheduleSub').innerHTML = ''; $('rescheduleSub').append('You didn’t get to finish ', Object.assign(document.createElement('strong'),{textContent:`“${t.title}”`}), ' in time. That happens. Pick a new date and keep going.');
+  $('newDue').min = iso(TODAY); $('newDue').value = iso(addDays(2));
+  const wins = tasks.filter(x=>x.status==='done').length;
+  $('winsList').innerHTML = `<li>${ICON.done}<span>You have completed ${wins} tasks this week</span></li><li>${ICON.done}<span>6-day study streak</span></li>`;
+  $('rescheduleDialog').showModal(); $('newDue').focus();
+}
+document.querySelectorAll('[data-quick]').forEach(b => b.onclick = () => { $('newDue').value = iso(addDays(Number(b.dataset.quick))); clearErrs(['newDue']); });
+$('confirmReschedule').onclick = () => {
+  clearErrs(['newDue']); const v = $('newDue').value;
+  if (!v){ setErr('newDue','choose a new date.'); $('newDue').focus(); return; }
+  if (diff(v)<0){ setErr('newDue',`the new date cannot be in the past. Choose ${fmt(TODAY)} or later.`); $('newDue').focus(); return; }
+  const t = tasks.find(x=>x.id===rescheduleId);
+  $('rescheduleDialog').close();
+  withUndo(`“${t.title}” rescheduled to ${fmt(parse(v))}`, () => { t.due = v; });
+};
+
+/* Drag and drop (manipulating) */
+let dragId = null;
+document.addEventListener('dragstart', e => { const c = e.target.closest && e.target.closest('.card'); if (!c) return; dragId = Number(c.dataset.id); c.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain', String(dragId)); });
+document.addEventListener('dragend', e => { document.querySelectorAll('.dragging,.drag-over').forEach(x=>x.classList.remove('dragging','drag-over')); });
+document.addEventListener('dragover', e => { const col = e.target.closest && e.target.closest('.column'); if (col && dragId){ e.preventDefault(); document.querySelectorAll('.drag-over').forEach(x=>x.classList.remove('drag-over')); col.classList.add('drag-over'); } });
+document.addEventListener('drop', e => { const col = e.target.closest && e.target.closest('.column'); if (!col || !dragId) return; e.preventDefault();
+  const t = tasks.find(x=>x.id===dragId); const to = col.dataset.status; dragId = null; if (t.status===to) return;
+  withUndo(`“${t.title}” moved to ${LABEL[to]}`, () => setStatus(t,to)); });
+function setStatus(t,to){ t.status = to; if (to==='done'){ t.sub=t.subTotal; t.doneLabel='today'; } }
+
+$('subjectFilter').onchange = renderDashboard;
+
+/* ---------- Group page ---------- */
+const mySummary = () => { const d = tasks.filter(t=>t.status==='done').length; return {done:d,total:tasks.length}; };
+function renderGroup(){
+  const v = $('groupView');
+  if (!group){
+    v.innerHTML = `<div class="page-head"><div><h1 tabindex="-1">Study group</h1><p>You are not in a study group yet.</p></div></div>
+      <div class="panel"><h2>Create a study group</h2><p class="sub">Invite friends, see each other’s progress and cheer each other on. You choose what is shared.</p>
+      <form id="createGroupForm" class="invite-form" novalidate><div class="field"><label for="groupName">Group name</label><input id="groupName" type="text" aria-describedby="groupNameErr">
+      <div class="error-msg hidden" id="groupNameErr"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 3 2 17h16z"/><path d="M10 8v4"/></svg><span></span></div></div>
+      <button class="btn btn-primary" type="submit" style="margin-top:26px">Create group</button></form></div>`;
+    $('createGroupForm').onsubmit = e => { e.preventDefault(); clearErrs(['groupName']); const n=$('groupName').value.trim();
+      if(!n){ setErr('groupName','enter a name for your group.'); $('groupName').focus(); return; }
+      group = {name:n, admin:true, members:[], pending:[]}; renderGroup(); toast(`Group “${n}” created. You are the admin.`); const h=document.querySelector('#groupView h1'); if(h) h.focus(); };
+    return;
+  }
+  const me = mySummary(), count = group.members.length + 1;
+  const myProg = settings.shareProgress ? `${me.done} of ${me.total} tasks this week` : 'Hidden from the group. Change this in Settings.';
+  const memberRow = m => { const shown = true; return `<li class="member"><div class="avatar" aria-hidden="true">${m.ini}</div>
+      <div class="info"><div class="name">${m.name}<span class="sr-only">, </span><span class="role">Member</span></div>
+        <div class="progress-track" aria-hidden="true"><div class="progress-fill" style="width:${Math.round(m.done/m.total*100)}%;${m.done/m.total<.3?'background:var(--amber)':''}"></div></div>
+        <div class="stat">${m.done} of ${m.total} tasks this week</div></div>
+      <div class="row-actions">${settings.allowEncouragement ? `<button class="btn btn-ghost btn-sm" type="button" data-action="encourage" data-name="${m.name}">Send encouragement<span class="sr-only"> to ${m.name}</span></button>` : ''}
+      ${group.admin ? `<button class="btn btn-danger btn-sm" type="button" data-action="remove-member" data-name="${m.name}">Remove<span class="sr-only"> ${m.name} from group</span></button>` : ''}</div></li>`; };
+  v.innerHTML = `<div class="page-head"><div><h1 tabindex="-1">Study group</h1><p>${group.name} · ${count} member${count>1?'s':''} · You are ${group.admin?'the admin':'a member'}</p></div>
+      <div class="head-actions"><button class="btn btn-danger" type="button" data-action="leave-group">Leave group</button></div></div>
+    <section class="panel" aria-labelledby="memH"><h2 id="memH">Members</h2><p class="sub">Progress shows tasks completed this week. Only what each person has chosen to share appears here.</p>
+      <ul class="list">
+        <li class="member"><div class="avatar" aria-hidden="true">${user.ini}</div><div class="info"><div class="name">${user.name} (you)<span class="sr-only">, </span><span class="role">${group.admin?'Admin':'Member'}</span></div>
+          ${settings.shareProgress?`<div class="progress-track" aria-hidden="true"><div class="progress-fill" style="width:${Math.round(me.done/me.total*100)}%"></div></div>`:''}
+          <div class="stat">${myProg}</div></div></li>
+        ${group.members.map(memberRow).join('')}
+      </ul></section>
+    <section class="panel" aria-labelledby="invH"><h2 id="invH">Invite a friend</h2><p class="sub">${settings.allowInvites?'They get an email with a link to join. They can decline.':'Invitations are paused. Turn them back on in Settings.'}</p>
+      <form id="inviteForm" class="invite-form" novalidate><div class="field"><label for="inviteEmail">Friend’s email address</label><input id="inviteEmail" type="email" aria-describedby="inviteEmailErr" ${settings.allowInvites?'':'disabled'}>
+        <div class="error-msg hidden" id="inviteEmailErr"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 3 2 17h16z"/><path d="M10 8v4"/></svg><span></span></div></div>
+        <button class="btn btn-primary" type="submit" style="margin-top:26px" ${settings.allowInvites?'':'disabled'}>Send invitation</button>
+        <button class="btn btn-ghost" type="button" data-action="copy-link" style="margin-top:26px">Copy invite link</button></form>
+      <h3 style="font-size:15px;margin:18px 0 4px">Pending invitations</h3>
+      ${group.pending.length ? `<ul class="list">${group.pending.map((p,i)=>`<li><div class="info"><div class="name">${p.email}</div><div class="stat">Invited ${p.days===0?'today':p.days+' day ago'}</div></div>
+        <span class="pending-badge">${ICON.clock}Pending</span>
+        <div class="row-actions"><button class="btn btn-ghost btn-sm" type="button" data-action="resend" data-i="${i}">Resend<span class="sr-only"> invitation to ${p.email}</span></button>
+        <button class="btn btn-ghost btn-sm" type="button" data-action="cancel-invite" data-i="${i}">Cancel invitation<span class="sr-only"> to ${p.email}</span></button></div></li>`).join('')}</ul>` : '<p class="empty">No pending invitations.</p>'}
+    </section>
+    <section class="panel" aria-labelledby="shH"><h2 id="shH">Shared deadlines</h2><p class="sub">Deadlines the group can see. Your own tasks stay private unless you switch sharing on.</p>
+      <ul class="list">
+        <li class="hl-group" style="padding-left:14px"><div class="info"><div class="name">Group project: database design</div><div class="stat">${fmt(addDays(11))} · shared by Naledi P.</div></div></li>
+        ${tasks.filter(t=>t.status!=='done').map(t=>`<li><div class="info"><div class="name" id="sh-${t.id}">${t.title}</div><div class="stat">${fmt(parse(t.due))}</div></div>
+          <button class="switch" type="button" role="switch" aria-checked="${t.shared}" aria-labelledby="sh-${t.id}" data-action="share-task" data-id="${t.id}"><span class="knob" aria-hidden="true"></span><span>${t.shared?'Shared':'Private'}</span></button></li>`).join('')}
+      </ul></section>`;
+  $('inviteForm').onsubmit = e => { e.preventDefault(); clearErrs(['inviteEmail']); const em = $('inviteEmail').value.trim().toLowerCase();
+    if(!em){ setErr('inviteEmail','enter your friend’s email address.'); $('inviteEmail').focus(); return; }
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ setErr('inviteEmail','enter a valid email address, for example name@example.com.'); $('inviteEmail').focus(); return; }
+    if(group.pending.some(p=>p.email===em)){ setErr('inviteEmail','this person has already been invited. You can resend the invitation below.'); $('inviteEmail').focus(); return; }
+    group.pending.unshift({email:em, days:0}); renderGroup(); toast(`Invitation sent to ${em}`); $('inviteEmail').focus(); };
+}
+
+/* ---------- Settings ---------- */
+const SETTINGS = [
+  ['Privacy and sharing', [
+    ['shareProgress','Share my weekly progress with my study group','Group members see how many tasks you completed this week. They never see task titles unless you share a task.'],
+    ['shareTitles','Share task titles by default','When off, new tasks are private. You can still share individual tasks from the Study group page.'],
+    ['allowInvites','Allow study group invitations','When off, nobody can invite you and you cannot send invitations.'],
+    ['allowEncouragement','Allow encouragement messages','Group members can send you short, pre-written messages. No free text, so nothing unkind can be sent.']]],
+  ['Notifications', [['emailReminders','Email me a reminder before each step is due','Sent the day before. You can turn this off at any time.']]],
+  ['Display and accessibility', [
+    ['reduceMotion','Reduce motion','Turns off animations such as the completion highlight. Also follows your device setting.'],
+    ['largeText','Larger text','Increases the text size across the site.']]],
+];
+function renderSettings(){
+  $('settingsView').innerHTML = `<div class="page-head"><div><h1 tabindex="-1">Settings</h1><p>You are in control of what is shared and how QuickStudy looks and behaves.</p></div></div>` +
+  SETTINGS.map((s,si)=>`<section class="panel" aria-labelledby="sh${si}"><h2 id="sh${si}">${s[0]}</h2>${s[1].map(r=>`<div class="setting"><div class="txt"><div class="t" id="lbl-${r[0]}">${r[1]}</div><div class="d">${r[2]}</div></div>
+    <button class="switch" type="button" role="switch" aria-checked="${settings[r[0]]}" aria-labelledby="lbl-${r[0]}" data-action="toggle-setting" data-key="${r[0]}"><span class="knob" aria-hidden="true"></span><span>${settings[r[0]]?'On':'Off'}</span></button></div>`).join('')}</section>`).join('');
+}
+function applyDisplay(){ document.body.classList.toggle('reduce-motion', settings.reduceMotion); document.body.classList.toggle('large-text', settings.largeText); }
+
+/* ---------- Auth ---------- */
+const emailOk = s => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(s);
+const initials = n => n.split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0].toUpperCase()).join('');
+function signIn(name,email){ user = { name, first:name.split(' ')[0], email, ini:initials(name) }; $('userName').textContent = name; $('userInitials').textContent = user.ini; }
+$('showPass').onchange = e => { $('regPass').type = e.target.checked ? 'text' : 'password'; };
+$('registerForm').onsubmit = e => {
+  e.preventDefault(); const ids = ['regName','regEmail','regPass','regTerms']; clearErrs(ids); $('regSummary').classList.add('hidden');
+  const name=$('regName').value.trim(), email=$('regEmail').value.trim(), pass=$('regPass').value, errs=[];
+  if(!name){ setErr('regName','enter your full name.'); errs.push(['regName','Enter your full name']); }
+  if(!email){ setErr('regEmail','enter your email address.'); errs.push(['regEmail','Enter your email address']); }
+  else if(!emailOk(email)){ setErr('regEmail','enter a valid email address, for example name@example.com.'); errs.push(['regEmail','Enter a valid email address']); }
+  if(pass.length<8 || !/\d/.test(pass)){ setErr('regPass','use at least 8 characters, including one number.'); errs.push(['regPass','Use a password with at least 8 characters and one number']); }
+  if(!$('regTerms').checked){ setErr('regTerms','you must agree to the terms to create an account.'); errs.push(['regTerms','Agree to the terms of use']); }
+  if(errs.length){ $('regSummaryList').innerHTML = errs.map(x=>`<li><a href="#${x[0]}" data-focus="${x[0]}">${x[1]}</a></li>`).join(''); $('regSummary').classList.remove('hidden'); $('regSummary').focus(); return; }
+  signIn(name,email); $('registerForm').reset(); location.hash = '#welcome';
+};
+$('regSummary').addEventListener('click', e => { const a = e.target.closest('[data-focus]'); if (a){ e.preventDefault(); $(a.dataset.focus).focus(); } });
+$('loginForm').onsubmit = e => {
+  e.preventDefault(); clearErrs(['logEmail','logPass']); const em=$('logEmail').value.trim(), pw=$('logPass').value; let first=null;
+  if(!emailOk(em)){ setErr('logEmail', em ? 'enter a valid email address, for example name@example.com.' : 'enter your email address.'); first='logEmail'; }
+  if(!pw){ setErr('logPass','enter your password.'); first = first || 'logPass'; }
+  if(first){ $(first).focus(); return; }
+  const local = em.split('@')[0].replace(/[._-]+/g,' '); const nm = local.replace(/\b\w/g,c=>c.toUpperCase());
+  signIn(nm, em); $('loginForm').reset(); location.hash = '#dashboard';
+};
+
+/* ---------- Delegated clicks ---------- */
+document.addEventListener('click', e => {
+  const close = e.target.closest('[data-close]'); if (close){ $(close.dataset.close).close(); return; }
+  const a = e.target.closest('[data-action]'); if (!a) return; const act = a.dataset.action, id = Number(a.dataset.id);
+  if (act==='add-task') openAddTask();
+  else if (act==='first-task'){ location.hash = '#dashboard'; setTimeout(openAddTask, 30); }
+  else if (act==='signout'){ user = null; location.hash = '#landing'; }
+  else if (act==='toggle-done'){ const t = tasks.find(x=>x.id===id); const to = t.status==='done' ? 'progress' : 'done';
+    withUndo(to==='done' ? `“${t.title}” marked complete. Nice work!` : `“${t.title}” moved back to In progress`, () => setStatus(t,to));
+    if (to==='done'){ const c = $('card-'+id); if (c) c.classList.add('just-completed'); } }
+  else if (act==='reschedule') openReschedule(id);
+  else if (act==='toggle-setting'){ const k = a.dataset.key; settings[k] = !settings[k]; applyDisplay(); renderSettings(); const b = document.querySelector(`[data-key="${k}"]`); if (b) b.focus(); toast(`Setting saved: it is now ${settings[k]?'on':'off'}.`); }
+  else if (act==='share-task'){ const t = tasks.find(x=>x.id===id); t.shared = !t.shared; renderGroup(); const b = document.querySelector(`[data-action="share-task"][data-id="${id}"]`); if (b) b.focus(); toast(t.shared?`“${t.title}” is now shared with ${group.name}`:`“${t.title}” is now private`); }
+  else if (act==='encourage'){ encourageTo = a.dataset.name; $('encSub').textContent = `Send a short message to ${encourageTo}.`; $('encourageDialog').showModal(); }
+  else if (act==='remove-member'){ const n = a.dataset.name; $('confirmTitle').textContent = `Remove ${n}?`; $('confirmText').textContent = `${n} will no longer see your progress or shared deadlines. You can invite them again later.`; $('confirmOk').textContent = 'Remove member'; pendingConfirm = () => { group.members = group.members.filter(m=>m.name!==n); renderGroup(); toast(`${n} was removed from ${group.name}`); const h=document.querySelector('#groupView h1'); if(h) h.focus(); }; $('confirmDialog').showModal(); }
+  else if (act==='leave-group'){ $('confirmTitle').textContent = `Leave ${group.name}?`; $('confirmText').textContent = 'You will stop sharing progress with this group. You can create or join another group at any time.'; $('confirmOk').textContent = 'Leave group'; pendingConfirm = () => { const n = group.name; group = null; renderGroup(); toast(`You left ${n}`); const h=document.querySelector('#groupView h1'); if(h) h.focus(); }; $('confirmDialog').showModal(); }
+  else if (act==='cancel-invite'){ const p = group.pending.splice(Number(a.dataset.i),1)[0]; renderGroup(); toast(`Invitation to ${p.email} cancelled`); }
+  else if (act==='resend'){ const p = group.pending[Number(a.dataset.i)]; p.days = 0; renderGroup(); toast(`Invitation resent to ${p.email}`); }
+  else if (act==='copy-link') toast('Invite link copied. Anyone with it can ask to join; you approve each request.');
+});
+$('confirmOk').onclick = () => { $('confirmDialog').close(); if (pendingConfirm) pendingConfirm(); pendingConfirm = null; };
+$('encSend').onclick = () => { const m = document.querySelector('input[name="encMsg"]:checked').value; $('encourageDialog').close(); toast(`Sent to ${encourageTo}: “${m}”`); };
+document.addEventListener('change', e => { const s = e.target.closest('[data-move]'); if (!s) return; const t = tasks.find(x=>x.id===Number(s.dataset.move)); const to = s.value; withUndo(`“${t.title}” moved to ${LABEL[to]}`, () => setStatus(t,to)); });
+
+/* Keyboard shortcut: N opens Add task on the dashboard */
+document.addEventListener('keydown', e => {
+  if ((e.key==='n'||e.key==='N') && !e.ctrlKey && !e.metaKey && !e.altKey && location.hash==='#dashboard' && !document.querySelector('dialog[open]') && !['INPUT','SELECT','TEXTAREA'].includes((document.activeElement||{}).tagName)){ e.preventDefault(); openAddTask(); }
+});
+
+/* Skip link must move focus to main (works with hash routing) */
+$('skipLink').addEventListener('click', e => { e.preventDefault(); $('main').focus(); });
+applyDisplay(); route();
+</script>
+</body>
+</html>
